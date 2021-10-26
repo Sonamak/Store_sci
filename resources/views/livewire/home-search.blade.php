@@ -23,7 +23,7 @@
             'h-60 sm:h-96': !guestAllowed || searchTerm.length < 3
         }"
     >
-        <h3 class="text-white text-4xl mb-5 font-comfortaa">{{ env('APP_NAME') }}</h3>
+        <h3 class="text-white text-4xl mb-5 font-comfortaa">{{ translate('dashboard.global.app_name') }}</h3>
 
         <input
             type="text"

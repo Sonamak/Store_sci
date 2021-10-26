@@ -120,7 +120,7 @@
 
                             <x-slot name="content">
                                 <x-jet-dropdown-link 
-                                href="{{ route('export.entries') }}">
+                                href="{{ route('export.entries', app()->getLocale()) }}">
                                     {{ translate('dashboard.common.export_database') }}
                                 </x-jet-dropdown-link>
 
@@ -195,7 +195,7 @@
                                             </a>
                                         @elseif($entry->is_private)
                                             <a 
-                                                href="https://api.whatsapp.com/send/?phone={{ $whatsapp }}&text={{ $entry->name }}"
+                                                href="https://api.whatsapp.com/send/?phone={{ $whatsapp }}&text={{ $entry->whatsapp_message }}"
                                                 target="_blank"
                                                 class="inline-flex rounded-full p-2 bg-green-400 hover:bg-green-500 text-white focus:outline-none"
                                                 title="Send Message"
@@ -410,7 +410,6 @@
                     <input class='border py-2 px-3 text-grey-darkest w-full' type="file" name='file'>
                 </form>
 
-
             </div>
           </div>
         </div>
@@ -431,10 +430,8 @@
 </div>
 
 
-
-
-
 @section('scripts')
+@if(auth()->user()->role == 'admin')
     <script type="text/javascript">
 
         document.getElementById("import-btn").addEventListener("click", function(e){
@@ -449,8 +446,10 @@
             document.getElementById("import-modal").classList.add("hidden");
         });
 
-        
+    </script>
+@endif
 
+    <script type="text/javascript">
         // Listen to events
         window.addEventListener('action:reset-fields', function() {
             resetFields();
@@ -535,4 +534,59 @@
             });
         }
     </script>
+
+<script src="https://creatantech.com/demos/codervent/rocker/vertical/assets/js/jquery.min.js"></script>
+<script>
+    $(function(){
+
+        $(".close-ad-btn").on("click", (e) => {
+            $(e.target).parents("#advertisement_modal").fadeOut();
+        });
+
+        let formData = new FormData();
+        let _token = $("[name='csrf-token']").attr('content');
+        formData.append('_token', _token);
+        let ad_id;
+
+        $.ajax({
+            url: "{{ route('check_user_ads') }}",
+            method: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response){
+                
+                if(response.ad !== null)
+                {
+                    ad_id = response.ad.id;
+                    let title = response.ad.title;
+                    let description = response.ad.description;
+                    let image = response.ad.image;
+
+                    $("#advertisement_modal .title").text(title);
+                    $("#advertisement_modal .description").text(description);
+                    $("#advertisement_modal .vertise-image").attr('src', '/storage/' + image);
+            
+                    $("#advertisement_modal").removeClass("hidden");
+                    
+                    formData.append('ad_id', ad_id);
+                    $.ajax({
+                        url: "{{ route('check_ad_seen') }}",
+                        method: 'post',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function(response){
+                            console.log(response);
+                        }
+                    });
+                }
+            }
+        })
+
+
+    });
+</script>
 @stop

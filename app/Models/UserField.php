@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Advertisement;
+
 class UserField extends Model {
     use HasFactory;
     Use SoftDeletes;
@@ -40,5 +42,14 @@ class UserField extends Model {
     
     public function parent() {
         return $this->belongsTo('App\Models\UserField', 'parent_id', 'id');
+    }
+
+    public function children() {
+        return $this->hasMany('App\Models\UserField', 'parent_id', 'id');
+    }
+
+    public function advertisements()
+    {
+        return $this->belongsToMany(Advertisement::class, 'advertisement_userField', 'user_field_id', 'advertisement_id')->withTimestamps();
     }
 }

@@ -6,7 +6,8 @@ use App\Http\Controllers\{
     AuthController,
     BackupController,
     HomeController,
-    SettingsController
+    SettingsController,
+    AdvertisementsController
 };
 use Illuminate\Support\Facades\Route;
 
@@ -18,9 +19,12 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController as FortifyRegister
 Route::get('/forgot-password', function () { abort(404); });
 Route::get('/reset-password', function () { abort(404); });
 
-
-
 Route::get('/locale/{locale}', [HomeController::class, 'setLocale'])->name('set_locale');
+
+// Ads Routes
+Route::post('check_user_ads', [AdvertisementsController::class, 'check_user_ads'])->name('check_user_ads');
+Route::post('check_ad_seen', [AdvertisementsController::class, 'check_ad_seen'])->name('check_ad_seen');
+
 
 Route::get('/', function () { return redirect(app()->getLocale()); });
 
@@ -38,7 +42,7 @@ Route::group([
     Route::get('/register/disabled', [AuthController::class, 'registerDisabled'])->name('register_disabled');
 
 
-    Route::post('/register', [FortifyRegisteredUserController::class, 'store'])
+    Route::post('/register', [AuthController::class, 'store'])
         ->middleware(['guest:'.config('fortify.guard')]);
 
     Route::get('/login', [FortifyAuthenticatedSessionController::class, 'create'])
@@ -57,22 +61,23 @@ Route::group([
     Route::get('/users/create', [UsersController::class, 'createUser'])->name('users_create');
     Route::get('/users/{user_id}/edit', [UsersController::class, 'editUser'])->name('user_edit');
 
+    Route::get('/user-fields', [UsersController::class, 'userFields'])->name('user_fields');
 
-
-
+    Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy_policy');
     Route::post('testing', [EntriesController::class, 'testing'])->name('testing');
 });
 
-
-
-Route::middleware(['auth:sanctum', 'verified', 'redirect_if_normal_user'])->group(function() {
+Route::group([
+    'prefix' => '{locale}',
+    'where' => ['locale' => '[a-zA-Z]{2}'],
+    'middleware' => ['auth:sanctum', 'redirect_if_normal_user', 'setlocale', 'verified']], function() {
 
     // Check and redirect if not admin
     Route::middleware(['check.admin'])->group(function() {
-        Route::get('/user-fields', [UsersController::class, 'userFields'])->name('user_fields');
-    
-        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
+        Route::resource('/advertisements', AdvertisementsController::class)->except(['show']);
+        
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
         // Backup
         Route::get('/backup', [BackupController::class, 'backup'])->name('backup');
         Route::post('/restore', [BackupController::class, 'restore'])->name('restore');
@@ -88,11 +93,6 @@ Route::middleware(['auth:sanctum', 'verified', 'redirect_if_normal_user'])->grou
         Route::get('/entries/import', [EntriesController::class, 'importCsv'])->name('entries');
     });
 });
-
-
-
-
-
 
 
 

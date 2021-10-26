@@ -9,13 +9,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Auth\Events\Registered;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Laravel\Fortify\Contracts\RegisterResponse;
+use Illuminate\Contracts\Auth\StatefulGuard;
+
+
 class AuthController extends Controller {
     private $userModel, $userFieldModel;
     private $registration;
+    protected $guard;
 
     public function __construct(
         User $user,
-        UserField $userField
+        UserField $userField,
+        StatefulGuard $guard
     ) {
         $this->userModel = $user;
         $this->userFieldModel = $userField;
@@ -23,6 +31,8 @@ class AuthController extends Controller {
         // Check registration is enabled or not
         $registration = Setting::where('option', 'registration')->first();
         $this->registration = $registration->value ?? 'off';
+
+        $this->guard = $guard;
     }
 
     public function register() {
@@ -59,6 +69,41 @@ class AuthController extends Controller {
         ];
 
         return view('auth.register', $data);
+    }
+
+    public function store(Request $request,
+                          CreatesNewUsers $creator): RegisterResponse
+    {
+        $specialization_id = $request->input('specialization_id');
+        $general_specialization_id = $request->input('general_specialization_id');
+        event(new Registered($user = $creator->create($request->all())));
+
+        // attach advertisements with userfield related to user.
+
+        $user_fields = UserField::whereIn('id', [$specialization_id, $general_specialization_id])
+        ->with('advertisements')
+        ->get();
+
+        $advertisements = $user_fields->map(function($user_field){
+            return $user_field->advertisements;
+        })->reject(function ($user_field) {
+            return !empty($user_field->advertisements);
+        });
+        
+        $advertisements = $advertisements->map(function($advertisement){
+            return count($advertisement) > 0 ? $advertisement : null;
+        })->reject(function ($advertisement, $key) {
+            return $advertisement === null;
+        });
+        
+        $ad_ids = $advertisements[1]->map(function($ad){
+            return $ad->id;
+        })->toArray();
+
+        $user->advertisements()->sync( $ad_ids );
+        
+        $this->guard->login($user);
+        return app(RegisterResponse::class);
     }
 
     public function registerDisabled() {

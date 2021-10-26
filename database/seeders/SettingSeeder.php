@@ -26,6 +26,10 @@ class SettingSeeder extends Seeder
             [
                 'option' => 'guest_allowed',
                 'value' => 'on'
+            ],
+            [
+                'option' => 'whatsapp_message',
+                'value' => 'Hello User'
             ]
         ]);
     }

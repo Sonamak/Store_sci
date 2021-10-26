@@ -25,7 +25,7 @@
                 <span class="ms-2">{{ translate('dashboard.common.disable') }}</span>
             </label>
         </div>
-
+        
         {{-- Registraion --}}
         <div class="col-span-6 sm:col-span-4">
             <x-jet-label for="registration" value="{{ translate('dashboard.settings.guest_allowed') }}" class="mb-1" />
@@ -39,6 +39,12 @@
                 <span class="ms-2">{{ translate('dashboard.common.disable') }}</span>
             </label>
         </div>
+
+        <div class="col-span-6 sm:col-span-4">
+            <label for="whatsapp_message">{{ translate('dashboard.settings.configure_whatsapp') }}</label>
+            <x-jet-textarea id="whatsapp_message" type='text' class="mt-1 block w-full" wire:model.defer="data.whatsapp_message" autocomplete="off" />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">
@@ -50,4 +56,5 @@
             {{ translate('buttons.save') }}
         </button>
     </x-slot>
+
 </x-jet-form-section>

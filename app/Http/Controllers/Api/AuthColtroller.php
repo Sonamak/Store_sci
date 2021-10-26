@@ -122,7 +122,6 @@ class AuthColtroller extends Controller {
     }
 
     public function register(Request $request) {
-
         // Validate data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -175,6 +174,9 @@ class AuthColtroller extends Controller {
             return $this->responseJson(false, null,'Registration failed', 400);
         }
 
+        // Attach user with Related Ads
+        $this->attachUserWithAds($user);
+
         return $this->responseJson(true, $user,'Registration success', 200);
     }
 
@@ -204,6 +206,9 @@ class AuthColtroller extends Controller {
         if(!Hash::check($password, $user->password)) {
             return $this->responseJson(false, null, 'Invalid password', 400);
         }
+        
+        // Attach user with Related Ads
+        $this->attachUserWithAds($user);
 
         return $this->responseJson(true, $user, 'Login success', 200);
     }
@@ -310,5 +315,35 @@ class AuthColtroller extends Controller {
         }
 
         return $this->responseJson(true, $user, 'Profile password updated', 200);
+    }
+
+    private function attachUserWithAds($user)
+    {
+        $specialization_id = $user->specialization_id;
+        $general_specialization_id = $user->general_specialization_id;
+
+        // attach advertisements with userfield related to user.
+
+        $user_fields = UserField::whereIn('id', [$specialization_id, $general_specialization_id])
+        ->with('advertisements')
+        ->get();
+
+        $advertisements = $user_fields->map(function($user_field){
+            return $user_field->advertisements;
+        })->reject(function ($user_field) {
+            return !empty($user_field->advertisements);
+        });
+        
+        $advertisements = $advertisements->map(function($advertisement){
+            return count($advertisement) > 0 ? $advertisement : null;
+        })->reject(function ($advertisement, $key) {
+            return $advertisement === null;
+        });
+        
+        $ad_ids = $advertisements[1]->map(function($ad){
+            return $ad->id;
+        })->toArray();
+
+        $user->advertisements()->syncWithoutDetaching( $ad_ids );
     }
 }

@@ -7,7 +7,7 @@
 
         <link rel="shortcut icon" href="{{ asset('logo.jpg') }}" type="image/jpg">
 
-        <title>{{ config('app.name', 'Laravel') }} - {{ $title }}</title>
+        <title>{{ translate('dashboard.global.app_name') }} - {{ $title }}</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -47,6 +47,10 @@
                         <span class="hidden lg:inline ps-2 me-2 border-e border-gray-500"></span>
 
                         <a href="#" class="block lg:inline w-full lg:w-auto hover:underline mt-2 lg:mt-0">Terms &amp; Conditions</a>
+                        <span class="hidden lg:inline ps-2 me-2 border-e border-gray-500"></span>
+
+                        <a href="{{ route('privacy_policy', app()->getLocale()) }}" class="block lg:inline w-full lg:w-auto hover:underline mt-2 lg:mt-0">Privacy policy</a>
+
                     </span>
 
                     @if(lang() == 'ar_AR')

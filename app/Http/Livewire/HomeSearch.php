@@ -18,13 +18,16 @@ class HomeSearch extends Component {
     public function downloadEntry($entry_id = null) {
         $entry = Entry::find($entry_id);
         $user = User::find(Auth::id());
+        
 
         if($entry->attachment_url) {
             $entry->download_count = $entry->download_count + 1;
-            $user->download_count = $user->download_count + 1;
-
             $entry->save();
-            $user->save();
+
+            if($user) {
+                $user->download_count = $user->download_count + 1;
+                $user->save();
+            }
         }
     }
 
@@ -33,10 +36,12 @@ class HomeSearch extends Component {
         $user = User::find(Auth::id());
 
         $entry->whatsapp_count = $entry->whatsapp_count + 1;
-        $user->whatsapp_count = $user->whatsapp_count + 1;
-
         $entry->save();
-        $user->save();
+
+        if($user) {
+            $user->whatsapp_count = $user->whatsapp_count + 1;
+            $user->save();
+        }
     }
 
     public function mount() {
@@ -56,8 +61,15 @@ class HomeSearch extends Component {
         $entries = [];
 
         if(!empty($this->searchTerm) && strlen($this->searchTerm) >= 3) {
-            $entries = Entry::where('name', 'LIKE', '%' . str_replace(' ', '% %', $this->searchTerm) . '%')
-                ->orderBy('created_at', 'DESC');
+            $words = explode(' ', trim($this->searchTerm));
+            $entries = Entry::where('name', 'LIKE', '%' . $words[0] . '%');
+
+            foreach($words as $key => $word)
+            {
+                if($key === 0) continue;
+                $entries = $entries->orwhere('name', 'LIKE', '%' . $word . '%');
+            }
+            $entries = $entries->orderBy('created_at', 'DESC');
 
             $entriesCount = $entries->count() ?? 0;
             $entries = $entries->paginate($this->showMax);

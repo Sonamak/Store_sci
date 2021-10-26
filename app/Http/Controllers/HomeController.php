@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller {
 
+    public function index(Request $request) {
+        return view('landing.home');
+    }
+
+    public function privacyPolicy(Request $request) {
+        return view('landing.privacy-policy-' . lang());
+    }
+
     public function setLocale(Request $request) {
         $locale = $request->locale ?? null;
         $redirect = $request->get('redirect') ?? 'home';
@@ -20,9 +28,5 @@ class HomeController extends Controller {
         } else {
             return redirect(route('home', app()->getLocale()));
         }
-    }
-
-    public function index(Request $request) {
-        return view('landing.home');
     }
 }

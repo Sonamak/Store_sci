@@ -14,11 +14,11 @@ class BackupController extends Controller {
     }
 
     public function backup() {
-        $time = date('Y-m-d-H-i-s', time());
-        $filename = 'backups/' . $time . '.zip';
+        // $time = date('Y-m-d-H-i-s', time());
+        // $filename = 'backups/' . $time . '.zip';
 
-        Artisan::call('backup:run --only-db');
-
+        Artisan::call('backup:run');
+        dd("A");
         return $this->storage->download($filename);
     }
 

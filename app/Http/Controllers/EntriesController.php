@@ -6,7 +6,6 @@ use App\Models\Entry;
 use Illuminate\Http\Request;
 use App\Exports\EntriesExport;
 
-
 use App\Imports\EntriesImport;
 use Maatwebsite\Excel\Facades\Excel;
 

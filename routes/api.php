@@ -3,7 +3,8 @@
 use App\Http\Controllers\Api\{
     AuthColtroller,
     EntriesController,
-    UsersController
+    UsersController,
+    AdvertisementsController
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,4 +40,12 @@ Route::middleware(['auth.api'])->group(function () {
     Route::get('/profile', [AuthColtroller::class, 'profile']);
     Route::post('/profile', [AuthColtroller::class, 'updateProfile']);
     Route::post('/profile/password', [AuthColtroller::class, 'updatePassword']);
+
+    Route::get('/profile', [AuthColtroller::class, 'profile']);
+    Route::get('/profile', [AuthColtroller::class, 'profile']);
+
+    // Ads Routes
+    Route::post('get_user_ads/{user_id}', [AdvertisementsController::class, 'get_user_ads'])->name('get_user_ads');
+    Route::post('active_ad_has_seen/{user_id}/{ad_id}', [AdvertisementsController::class, 'active_ad_has_seen'])->name('active_ad_has_seen');
+
 });

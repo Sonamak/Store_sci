@@ -1,0 +1,10 @@
+.global-message
+{
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    z-index: 5;
+    border-radius: 50px;
+    color: #fff;
+    min-width: 500px;
+}

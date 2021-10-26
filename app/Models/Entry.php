@@ -25,6 +25,7 @@ class Entry extends Model {
     protected $appends = [
         'attachment_url',
         'file_type',
+        'whatsapp_message'
     ];
 
     // Autorun
@@ -40,10 +41,14 @@ class Entry extends Model {
     public function uploader() {
         return $this->belongsTo('App\Models\User', 'uploaded_by', 'id');
     }
-
+    
     // Appends
+    public function getWhatsappMessageAttribute() {
+        $whatsapp_message = Setting::where('option', 'whatsapp_message')->first()->value;
+        return $whatsapp_message;
+    }
     public function getAttachmentUrlAttribute() {
-        if(empty($this->attachment_path) || !Storage::exists($this->attachment_path)) {
+        if(empty($this->attachment_path) || !Storage::disk('public')->exists($this->attachment_path)) {
             return null;
         }
 

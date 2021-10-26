@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+use Illuminate\Support\Facades\Blade;
 
 use App\Actions\Jetstream\DeleteUser;
 use Illuminate\Support\ServiceProvider;
@@ -15,26 +16,16 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerComponent('textarea');
     }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
+    
     public function boot()
     {
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
     }
-
-    /**
-     * Configure the permissions that are available within the application.
-     *
-     * @return void
-     */
+    
     protected function configurePermissions()
     {
         Jetstream::defaultApiTokenPermissions(['read']);
@@ -45,5 +36,10 @@ class JetstreamServiceProvider extends ServiceProvider
             'update',
             'delete',
         ]);
+    }
+
+    protected function registerComponent(string $component)
+    {
+        Blade::component('jetstream::components.'.$component, 'jet-'.$component);
     }
 }

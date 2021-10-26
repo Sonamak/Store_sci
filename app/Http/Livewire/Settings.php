@@ -11,6 +11,7 @@ class Settings extends Component {
         'whatsapp' => null,
         'registration' => 'off',
         'guest_allowed' => 'on',
+        'whatsapp_message' => null
     ];
 
     public function saveSettings() {
@@ -32,6 +33,10 @@ class Settings extends Component {
         $settings = Setting::get();
 
         // Data
+        $whatsapp_message = $settings->filter(function($option) {
+            return $option->option == 'whatsapp_message';
+        })->values()[0];
+        
         $whatsapp = $settings->filter(function($option) {
             return $option->option == 'whatsapp';
         })->values()[0];
@@ -46,11 +51,12 @@ class Settings extends Component {
         $this->data['whatsapp'] = $whatsapp->value ?? null;
         $this->data['registration'] = $registration->value ?? 'off';
         $this->data['guest_allowed'] = $guest_allowed->value ?? 'on';
+        $this->data['whatsapp_message'] = $whatsapp_message->value ?? null;
+        
     }
 
     public function render() {
         $this->load();
-
         return view('livewire.settings');
     }
 }

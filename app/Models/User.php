@@ -23,11 +23,6 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'email',
@@ -45,11 +40,6 @@ class User extends Authenticatable
         'whatsapp_count',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -58,20 +48,10 @@ class User extends Authenticatable
         'api_token'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
+    
     protected $appends = [
         'profile_photo_url',
         'country_name',
@@ -125,5 +105,10 @@ class User extends Authenticatable
             ->first();
 
         return $name->name ?? null;
+    }
+
+    public function advertisements()
+    {
+        return $this->belongsToMany(Advertisement::class, 'advertisement_user', 'user_id', 'advertisement_id')->withPivot('seen')->withTimestamps();
     }
 }

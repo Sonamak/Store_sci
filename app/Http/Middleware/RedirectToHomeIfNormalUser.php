@@ -17,7 +17,7 @@ class RedirectToHomeIfNormalUser
     public function handle(Request $request, Closure $next) {
 
         if($request->user()->role == 'user') {
-            return redirect(route('home'));
+            return redirect(route('home', app()->getLocale()));
         }
 
         return $next($request);

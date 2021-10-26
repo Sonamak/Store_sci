@@ -36,18 +36,28 @@ class EntriesController extends Controller {
     }
 
     public function search(Request $request) {
+
+        // fixing api here 
         $keyword = $request->keyword ?? null;
 
-        $entries = $this->entryModel
-            ->where('name', 'LIKE',  '%' . str_replace(' ', '% %', $keyword) . '%')
-            ->get();
-
+        $words = $keyword ? explode(' ', trim($keyword)) : null;
+        if($words)
+        {
+            $entries = $this->entryModel::where('name', 'LIKE', '%' . $words[0] . '%');
+            foreach($words as $key => $word)
+            {
+                if($key === 0) continue;
+                $entries = $entries->orwhere('name', 'LIKE', '%' . $word . '%');
+            }
+            $entries = $entries->orderBy('created_at', 'DESC');
+        }
+        $entries = $entries->get();
         $data = [
             'guest_allowed' => $this->guest_allowed,
             'whatsapp' => $this->whatsapp,
             'entries' => $entries
         ];
-
+        
         return $this->responseJson(true, $data, count($entries) . ' entries found', 200);
     }
 }

@@ -12,6 +12,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-s-8 sm:-my-px sm:ms-10 sm:flex">
+                    
                     <x-jet-nav-link href="{{ route('home', app()->getLocale()) }}" :active="request()->routeIs('home')">
                         {{ translate('guests.home.home') }}
                     </x-jet-nav-link>
@@ -32,6 +33,10 @@
 
                             <x-jet-nav-link href="{{ route('settings', app()->getLocale()) }}" :active="request()->routeIs('settings')">
                                 {{ translate('dashboard.settings.settings') }}
+                            </x-jet-nav-link>
+
+                            <x-jet-nav-link href="{{ route('advertisements.index', app()->getLocale()) }}" :active="request()->routeIs('advertisments.index')">
+                                {{ translate('dashboard.advertisements.advertisements') }}
                             </x-jet-nav-link>
                         @endif
                     @endif
@@ -67,7 +72,7 @@
                                     {{ translate('dashboard.profile.manage_account') }}
                                 </div>
 
-                                <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                                <x-jet-dropdown-link href="{{ route('profile.show', app()->getLocale()) }}">
                                     {{ translate('dashboard.profile.profile') }}
                                 </x-jet-dropdown-link>
 
@@ -137,6 +142,10 @@
                     <x-jet-responsive-nav-link href="{{ route('settings', app()->getLocale()) }}" :active="request()->routeIs('settings')">
                         {{ translate('dashboard.settings.settings') }}
                     </x-jet-responsive-nav-link>
+
+                    <x-jet-responsive-nav-link href="{{ route('advertisements.index', app()->getLocale()) }}" :active="request()->routeIs('advertisements.index')">
+                        {{ translate('dashboard.advertisements.advertisements') }}
+                    </x-jet-responsive-nav-link>
                 @endif
             @endif
         </div>
@@ -153,7 +162,7 @@
 
                 <div class="mt-3 space-y-1">
                     <!-- Account Management -->
-                    <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+                    <x-jet-responsive-nav-link href="{{ route('profile.show', app()->getLocale()) }}" :active="request()->routeIs('profile.show')">
                         {{ translate('dashboard.profile.profile') }}
                     </x-jet-responsive-nav-link>
 

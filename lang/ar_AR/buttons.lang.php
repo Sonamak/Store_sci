@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'confirm' => 'يتأكد',
+    'confirm' => 'تأكيد',
     'yes_continue' => 'نعم ، استمر',
-    'cancel' => 'يلغي',
-    'upload' => 'تحميل',
+    'cancel' => 'إلغاء',
+    'upload' => 'رفع ملف',
     'update' => 'تحديث',
     'create' => 'إنشاء',
-    'save' => 'يحفظ',
+    'save' => 'حفظ',
     'saved' => 'تم الحفظ',
     'got_it' => 'تمام',
     'make_all_private' => 'اجعل كل شيء خاصًا',

@@ -11,6 +11,8 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
+use Smalot\PdfParser\Parser;
+
 class Entries extends Component {
     use WithPagination;
     use WithFileUploads;
@@ -45,6 +47,20 @@ class Entries extends Component {
     }
 
     public function createEntry() {
+
+        // $pdfParser = new Parser();
+        // $pdf = $pdfParser->parseFile('storage/attachments/new_store_sci-converted.pdf');
+        // $pages = $pdf->getPages();
+        // $content_first_page = $pages[0]->getText();
+
+        // $this->dispatchBrowserEvent('livewire-event', [
+        //     'success' => true,
+        //     'data' => $content_first_page,
+        //     'message' => $content_first_page,
+        // ]);
+
+        // return;
+
         // Check authorization
         if(is_user()) {
             return $this->dispatchBrowserEvent('livewire-event', [
@@ -71,7 +87,7 @@ class Entries extends Component {
 
             // Upload file
             if(!$this->is_private) {
-                $filename = $this->attachment_path->store('attachments');
+                $filename = $this->attachment_path->store('attachments', 'public');
                 $validatedData['attachment_path'] = $filename;
             }
 
@@ -264,8 +280,8 @@ class Entries extends Component {
         $user = User::find(Auth::id());
 
         if($entry->attachment_url) {
-            $entry->download_count = $entry->download_count + 1;
-            $user->download_count = $user->download_count + 1;
+            $entry->download_count += 1;
+            $user->download_count += 1;
 
             $entry->save();
             $user->save();

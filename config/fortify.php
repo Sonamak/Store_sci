@@ -131,6 +131,11 @@ return [
     |
     */
 
+    'redirects' => [
+        'login' => app()->getLocale() . '/entries',
+        'register' => app()->getLocale() . '/entries',
+    ],
+
     'features' => [
         Features::registration(),
         Features::resetPasswords(),

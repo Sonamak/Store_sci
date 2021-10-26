@@ -67,6 +67,7 @@ return [
         'settings' => 'Settings',
         'application_settings' => 'Application Settings',
         'configure_settings' => 'Configure Application Settings',
+        'configure_whatsapp' => 'Whatsapp Message',
         'whatsapp_number' => 'WhatsApp Number',
         'user_registration' => 'User Registration',
         'guest_allowed' => 'Guest Mode',
@@ -81,5 +82,38 @@ return [
         'new_password' => 'New Password',
         'profile_information' => 'Profile Information',
         'update_password' => 'Update Password',
+    ],
+
+    'advertisements' => [
+        'advertisements' => 'Advertisements',
+        'new_advertisement' => 'New Advertisement',
+        'edit_advertisement' => 'Edit Advertisement',
+
+        'table_id' => '#Id',
+        'table_title' => 'Title',
+        'table_image' => 'Image',
+        'table_related_specializations' => 'Related Specializations',
+        'table_start_date' => 'Start Date',
+        'table_end_date' => 'End Date',
+        'table_created_at' => 'Created at',
+        'table_actions' => 'Actions',
+
+        'table_edit' => 'Edit',
+        'table_delete' => 'Delete',
+
+        'create_title' => 'Title',
+        'create_description' => 'Description',
+        'create_image' => 'Image: Recommeneded (350 x 400)',
+        'create_related_specializations' => 'Related Specializations',
+        'create_start_date' => 'START DATE',
+        'create_end_date' => 'END DATE',
+        'create_add_advertisement' => 'Add Advertisement',
+
+        'edit_update' => 'Update Advertisement',
+        'edit_delete' => 'Delete Advertisement',
+    ],
+
+    'global' => [
+        'app_name' => config('app.name', 'Laravel'),
     ],
 ];
